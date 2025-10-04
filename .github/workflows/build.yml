@@ -1,21 +1,39 @@
-name: Sam Build test
+name: Build and Release
 
-on: [push]
- 
+on:
+  push:
+    tags:
+      - 'v*'   # Trigger on version tags like v1.0, v1.2.3
+
 jobs:
   build:
- 
+    name: Build and Create Release
     runs-on: windows-latest
- 
-    steps:
-    - uses: actions/checkout@v4
-      name: Checkout Code
-     
-    - name: Setup MSBuild Path
-      uses: microsoft/setup-msbuild@v2
-       
 
- 
-    - name: Build and Publish Web App
-      run: msbuild /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
- 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore NuGet packages
+        run: nuget restore samtest-pipe-framework.sln
+
+      - name: Build the solution
+        run: msbuild samtest-pipe-framework.sln /p:Configuration=Release
+
+      - name: Create ZIP of binaries
+        run: |
+          mkdir release
+          xcopy /s /y /i "samtest-pipe-framework\bin\Release" release
+          powershell Compress-Archive -Path release\* -DestinationPath samtest-pipe-framework-output.zip
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          files: output.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
