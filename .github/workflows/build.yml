@@ -25,6 +25,12 @@ jobs:
       - name: Build the solution
         run: msbuild samtest-pipe-framework.sln /p:Configuration=Release
 
+      - name: List output folders after build
+        run: |
+          echo "Searching for EXEs or DLLs:"
+          Get-ChildItem -Recurse -Filter *.exe
+          Get-ChildItem -Recurse -Filter *.dll
+
       - name: Create ZIP of binaries
         run: |
           mkdir release
