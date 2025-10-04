@@ -1,13 +1,15 @@
-name: Build and Release
+name: Manual Build and Release
 
 on:
-  push:
-    tags:
-      - 'v*'   # Trigger on version tags like v1.0, v1.2.3
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release Tag (e.g. v1.0.0)'
+        required: true
+        type: string
 
 jobs:
   build:
-    name: Build and Create Release
     runs-on: windows-latest
 
     steps:
@@ -26,17 +28,15 @@ jobs:
       - name: Create ZIP of binaries
         run: |
           mkdir release
-          xcopy /s /y /i "samtest-pipe-framework\bin\Release" release
-          powershell Compress-Archive -Path release\* -DestinationPath samtest-pipe-framework-output.zip
+          xcopy /s /y /i "Ysamtest-pipe-framework\bin\Release" release
+          powershell Compress-Archive -Path release\* -DestinationPath output.zip
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
-          files: output.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.SAMTEST_PIPE_FRAMEWORK_BUILD }}
+          tag: ${{ inputs.tag_name }}
+          name: Release ${{ inputs.tag_name }}
+          artifacts: output.zip
+          token: ${{ secrets.SAMTEST_PIPE_FRAMEWORK_BUILD }}
 
-          #
 
