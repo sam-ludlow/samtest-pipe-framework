@@ -35,7 +35,7 @@ jobs:
         run: |
           dir
           mkdir release
-          xcopy /s /y /i "samtest-pipe-framework\bin\Release" release
+          xcopy /s /y /i "bin\Release" release
           powershell Compress-Archive -Path release\* -DestinationPath output.zip
 
       - name: Create GitHub Release
