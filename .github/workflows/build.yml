@@ -20,21 +20,29 @@ jobs:
         id: get_version
         shell: powershell
         run: |
+          $content = Get-Content -Path "Properties/AssemblyInfo.cs" -Raw
+          if ($content -match 'AssemblyVersion\("([^"]+)"\)') {
+            $version = $Matches[1]
+            Write-Host "Found version: $version"
+            # Set the output for use in later steps
+
+            env.tag_name = $version
 
 
 
 
-            $content = Get-Content -Path "Properties/AssemblyInfo.cs" -Raw
 
-            if ($content -match 'AssemblyVersion\("([^"]+)"\)') {
-              $version = $Matches[1]
-              Write-Host "Found version: $version"
-              # Set the output for use in later steps
-              Write-Output "::set-output name=version::$version"
-            } else {
-              Write-Host "::error::Could not find AssemblyVersion in AssemblyInfo.cs"
-              exit 1
-            }
+            Write-Output "::set-output name=version::$version"
+          } else {
+            Write-Host "::error::Could not find AssemblyVersion in AssemblyInfo.cs"
+            exit 1
+          }
+
+      - name: Show version
+        shell: powershell
+        run: |
+          Write-Host "Found version: $env.tag_name"
+    
           # # Adjust the path to your AssemblyInfo.cs as needed
           # $content = Get-Content -Path "Properties/AssemblyInfo.cs"
           # # Regex to capture the version inside "AssemblyVersion("...")
