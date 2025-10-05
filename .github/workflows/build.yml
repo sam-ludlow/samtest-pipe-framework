@@ -8,8 +8,8 @@ on:
         required: true
         type: string
 
-env:
-  TAG_NAME: '000'
+# env:
+#   TAG_NAME: '000'
 
 jobs:
   build:
@@ -45,9 +45,9 @@ jobs:
           if ($LASTEXITCODE -eq 0) {
             Write-Host "Tag EXISTS '$env:TAG_NAME'."
             exit 1
+          } else {
+            Write-Host "Tag OK '$env:TAG_NAME'."
           }
-          
-          Write-Host "Tag OK '$env:TAG_NAME'."
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
