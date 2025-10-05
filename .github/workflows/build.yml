@@ -69,7 +69,7 @@ jobs:
 
           mkdir release64
           xcopy /s /y /i "bin\Release64" release64
-          powershell Compress-Archive -Path release64\* -DestinationPath "samtest-pipe-framework-$env:TAG_NAME_x64.zip"
+          powershell Compress-Archive -Path release64\* -DestinationPath "samtest-pipe-framework-${env:TAG_NAME}_x64.zip"
 
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
