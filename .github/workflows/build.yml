@@ -81,7 +81,7 @@ jobs:
           tag: ${{ env.TAG_NAME }}
           name: ${{ env.TAG_NAME }}
           body: ${{ github.event.inputs.release_description }}
-          artifacts: "samtest-pipe-framework-$env:TAG_NAME.zip"
+          artifacts: samtest-pipe-framework-${{ env.TAG_NAME }}.zip
           token: ${{ secrets.SAMTEST_PIPE_FRAMEWORK_BUILD }}
 
 
