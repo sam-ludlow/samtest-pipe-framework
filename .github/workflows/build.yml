@@ -9,7 +9,7 @@ on:
         type: string
 
 env:
-  tag_name: '0'
+  TAG_NAME: '0'
 
 jobs:
   build:
@@ -18,13 +18,12 @@ jobs:
     steps:
 
       - name: Test
-        shell: bash
+        shell: powershell
         run: |
-            $version="999"
-            echo "{TAG_NAME}={$version}" >> $GITHUB_ENV
+            $myversion="999"
+            "TAG_NAME=$myversion" | Out-File -FilePath $env:GITHUB_ENV -Append
 
-            echo "-------"
-            echo "Hello: {state.tag_name}"
+            Write-Host "Found version: $TAG_NAME"
             exit 1
 
 
