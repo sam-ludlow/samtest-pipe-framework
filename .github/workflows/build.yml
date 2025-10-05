@@ -3,13 +3,10 @@ name: Manual Build and Release
 on:
   workflow_dispatch:
     inputs:
-      old_tag_name:
-        description: 'Release Tag (e.g. v1.0.0)'
-        required: true
+      release_description:
+        description: 'Release Body (Optional)'
+        required: false
         type: string
-
-# env:
-#   TAG_NAME: '000'
 
 jobs:
   build:
@@ -78,6 +75,7 @@ jobs:
         with:
           tag: ${{ env.TAG_NAME }}
           name: ${{ env.TAG_NAME }}
+          body: ${{ github.event.inputs.release_description }}
           artifacts: output.zip
           token: ${{ secrets.SAMTEST_PIPE_FRAMEWORK_BUILD }}
 
