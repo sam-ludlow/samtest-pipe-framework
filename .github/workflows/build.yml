@@ -17,17 +17,6 @@ jobs:
 
     steps:
 
-      # - name: Test
-      #   shell: pwsh
-      #   run: |
-      #     $version = "1.2.3"
-      #     "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-
-      #     Write-Host "VERSION is: $env:VERSION"
-          
-      #     exit 1
-
-
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -47,51 +36,38 @@ jobs:
           }
 
       - name: Show version
-        shell: powershell
+        shell: pwsh
         run: |
           Write-Host "VERSION is: $env:TAG_NAME"
-    
-          # # Adjust the path to your AssemblyInfo.cs as needed
-          # $content = Get-Content -Path "Properties/AssemblyInfo.cs"
-          # # Regex to capture the version inside "AssemblyVersion("...")
-          # if ($content -match 'AssemblyVersion\("([^"]+)"\)') {
-          #     $version = $Matches[1]
-          # } else {
-          #     Write-Error "Could not parse version from AssemblyInfo.cs"
-          #     exit 1
-          # }
-          # Write-Host "Parsed version: $version"
-          # # Set it as an output
-          # Write-Host "::set-output name=version::$version"
 
-      # - name: Setup MSBuild
-      #   uses: microsoft/setup-msbuild@v2
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
 
-      # - name: Restore NuGet packages
-      #   run: nuget restore samtest-pipe-framework.sln
+      - name: Restore NuGet packages
+        run: nuget restore samtest-pipe-framework.sln
 
-      # - name: Build the solution
-      #   run: msbuild samtest-pipe-framework.sln /p:Configuration=Release
+      - name: Build the solution
+        run: msbuild samtest-pipe-framework.sln /p:Configuration=Release
 
-      # - name: List output folders after build
-      #   run: |
-      #     echo "Searching for EXEs or DLLs:"
-      #     Get-ChildItem -Recurse -Filter *.exe
-      #     Get-ChildItem -Recurse -Filter *.dll
+      - name: List output folders after build
+        run: |
+          echo "Searching for EXEs or DLLs:"
+          Get-ChildItem -Recurse -Filter *.exe
+          Get-ChildItem -Recurse -Filter *.dll
 
-      # - name: Create ZIP of binaries
-      #   run: |
-      #     dir
-      #     mkdir release
-      #     xcopy /s /y /i "bin\Release" release
-      #     powershell Compress-Archive -Path release\* -DestinationPath output.zip
+      - name: Create ZIP of binaries
+        run: |
+          dir
+          mkdir release
+          xcopy /s /y /i "bin\Release" release
+          powershell Compress-Archive -Path release\* -DestinationPath output.zip
 
-      # - name: Create GitHub Release
-      #   uses: ncipollo/release-action@v1
-      #   with:
-      #     tag: ${{ inputs.tag_name }}
-      #     name: Release ${{ inputs.tag_name }}
-      #     artifacts: output.zip
-      #     token: ${{ secrets.SAMTEST_PIPE_FRAMEWORK_BUILD }}
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ env.TAG_NAME }}
+          name: ${{ env.TAG_NAME }}
+          artifacts: output.zip
+          token: ${{ secrets.SAMTEST_PIPE_FRAMEWORK_BUILD }}
 
 
