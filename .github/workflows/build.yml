@@ -20,18 +20,33 @@ jobs:
         id: get_version
         shell: powershell
         run: |
-          # Adjust the path to your AssemblyInfo.cs as needed
-          $content = Get-Content -Path "Properties/AssemblyInfo.cs"
-          # Regex to capture the version inside "AssemblyVersion("...")
-          if ($content -match 'AssemblyVersion\("([^"]+)"\)') {
+
+
+
+
+            $content = Get-Content -Path "Properties/AssemblyInfo.cs" -Raw
+
+            if ($content -match 'AssemblyVersion\("([^"]+)"\)') {
               $version = $Matches[1]
-          } else {
-              Write-Error "Could not parse version from AssemblyInfo.cs"
+              Write-Host "Found version: $version"
+              # Set the output for use in later steps
+              Write-Output "::set-output name=version::$version"
+            } else {
+              Write-Host "::error::Could not find AssemblyVersion in AssemblyInfo.cs"
               exit 1
-          }
-          Write-Host "Parsed version: $version"
-          # Set it as an output
-          Write-Host "::set-output name=version::$version"
+            }
+          # # Adjust the path to your AssemblyInfo.cs as needed
+          # $content = Get-Content -Path "Properties/AssemblyInfo.cs"
+          # # Regex to capture the version inside "AssemblyVersion("...")
+          # if ($content -match 'AssemblyVersion\("([^"]+)"\)') {
+          #     $version = $Matches[1]
+          # } else {
+          #     Write-Error "Could not parse version from AssemblyInfo.cs"
+          #     exit 1
+          # }
+          # Write-Host "Parsed version: $version"
+          # # Set it as an output
+          # Write-Host "::set-output name=version::$version"
 
       # - name: Setup MSBuild
       #   uses: microsoft/setup-msbuild@v2
