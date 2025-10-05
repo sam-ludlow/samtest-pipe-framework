@@ -8,6 +8,9 @@ on:
         required: true
         type: string
 
+env:
+  tag_name: '0'
+
 jobs:
   build:
     runs-on: windows-latest
