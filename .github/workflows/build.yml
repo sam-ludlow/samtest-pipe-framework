@@ -59,10 +59,6 @@ jobs:
           msbuild samtest-pipe-framework.csproj /p:Configuration=Release /p:Platform=x86 /p:OutputPath=bin\Release32\
           msbuild samtest-pipe-framework.csproj /p:Configuration=Release /p:Platform=x64 /p:OutputPath=bin\Release64\
 
-       # run: msbuild samtest-pipe-framework.sln /p:Configuration=Release
-
-
-
       - name: Create ZIP of binaries
         run: |
           dir -r
@@ -73,7 +69,7 @@ jobs:
 
           mkdir release64
           xcopy /s /y /i "bin\Release64" release64
-          powershell Compress-Archive -Path release64\* -DestinationPath output-max-ram.zip
+          powershell Compress-Archive -Path release64\* -DestinationPath "samtest-pipe-framework-MAX-RAM-$env:TAG_NAME.zip"
 
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
@@ -81,7 +77,7 @@ jobs:
           tag: ${{ env.TAG_NAME }}
           name: ${{ env.TAG_NAME }}
           body: ${{ github.event.inputs.release_description }}
-          artifacts: samtest-pipe-framework-${{ env.TAG_NAME }}.zip
+          artifacts: samtest-pipe-framework-${{ env.TAG_NAME }}.zip,samtest-pipe-framework-MAX-RAM-${{ env.TAG_NAME }}.zip
           token: ${{ secrets.SAMTEST_PIPE_FRAMEWORK_BUILD }}
 
 
