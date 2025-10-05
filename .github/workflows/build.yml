@@ -39,14 +39,26 @@ jobs:
         shell: pwsh
         run: |
           Write-Host "VERSION is: $env:TAG_NAME"
-          git fetch --tags
-          $existingTags = git tag
-          if ($existingTags -contains $env:TAG_NAME) {
-            Write-Host "Tag $env:TAG_NAME already exists"
+          # git fetch --tags
+          # $existingTags = git tag
+          # if ($existingTags -contains $env:TAG_NAME) {
+          #   Write-Host "Tag $env:TAG_NAME already exists"
+          #   exit 1
+          # }
+
+
+          $tag = $env:TAG_NAME
+          git ls-remote --exit-code --tags origin "refs/tags/$tag" *> $null
+
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "Tag $tag exists on remote."
             exit 1
+          } else {
+            Write-Host "Tag $tag does not exist on remote."
           }
 
-          Write-Host "Tag OK $env:TAG_NAME"
+
+          # Write-Host "Tag OK $env:TAG_NAME"
           exit 1
 
       - name: Setup MSBuild
