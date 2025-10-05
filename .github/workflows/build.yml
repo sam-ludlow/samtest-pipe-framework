@@ -35,31 +35,19 @@ jobs:
             exit 1
           }
 
-      - name: Validate Version
+      - name: Validate Tag
         shell: pwsh
         run: |
-          Write-Host "VERSION is: $env:TAG_NAME"
-          # git fetch --tags
-          # $existingTags = git tag
-          # if ($existingTags -contains $env:TAG_NAME) {
-          #   Write-Host "Tag $env:TAG_NAME already exists"
-          #   exit 1
-          # }
-
-
+          Write-Host "Tag Requested '$env:TAG_NAME'.'"
 
           git ls-remote --exit-code --tags origin "refs/tags/$env:TAG_NAME" *> $null
 
           if ($LASTEXITCODE -eq 0) {
-            Write-Host "Tag $env:TAG_NAME exists on remote."
+            Write-Host "Tag EXISTS '$env:TAG_NAME'."
             exit 1
-          } else {
-            Write-Host "Tag $env:TAG_NAME does not exist on remote."
           }
-
-
-          # Write-Host "Tag OK $env:TAG_NAME"
-          exit 1
+          
+          Write-Host "Tag OK '$env:TAG_NAME'."
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
