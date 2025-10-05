@@ -55,7 +55,12 @@ jobs:
         run: nuget restore samtest-pipe-framework.sln
 
       - name: Build the solution
-        run: msbuild samtest-pipe-framework.sln /p:Configuration=Release
+        run: msbuild samtest-pipe-framework.csproj /p:Configuration=Release /p:Platform=x86 /p:OutputPath=bin\Release\
+
+       # run: msbuild samtest-pipe-framework.sln /p:Configuration=Release
+
+
+
 
       - name: List output folders after build
         run: |
@@ -65,7 +70,7 @@ jobs:
 
       - name: Create ZIP of binaries
         run: |
-          dir
+          dir -r
           mkdir release
           xcopy /s /y /i "bin\Release" release
           powershell Compress-Archive -Path release\* -DestinationPath output.zip
