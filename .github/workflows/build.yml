@@ -21,7 +21,7 @@ jobs:
         shell: powershell
         run: |
           # Adjust the path to your AssemblyInfo.cs as needed
-          $content = Get-Content -Path "samtest-pipe-framework/Properties/AssemblyInfo.cs"
+          $content = Get-Content -Path "Properties/AssemblyInfo.cs"
           # Regex to capture the version inside "AssemblyVersion("...")
           if ($content -match 'AssemblyVersion\("([^"]+)"\)') {
               $version = $Matches[1]
