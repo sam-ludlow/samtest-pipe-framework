@@ -51,8 +51,8 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
-      # - name: Restore NuGet packages
-      #   run: nuget restore samtest-pipe-framework.sln
+      - name: Restore NuGet packages
+        run: nuget restore samtest-pipe-framework.sln
 
       - name: Build the solution
         run: |
@@ -69,7 +69,7 @@ jobs:
 
           mkdir release64
           xcopy /s /y /i "bin\Release64" release64
-          powershell Compress-Archive -Path release64\* -DestinationPath "samtest-pipe-framework-MAX-RAM-$env:TAG_NAME.zip"
+          powershell Compress-Archive -Path release64\* -DestinationPath "samtest-pipe-framework-$env:TAG_NAME_x64.zip"
 
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
@@ -77,7 +77,7 @@ jobs:
           tag: ${{ env.TAG_NAME }}
           name: ${{ env.TAG_NAME }}
           body: ${{ github.event.inputs.release_description }}
-          artifacts: samtest-pipe-framework-${{ env.TAG_NAME }}.zip,samtest-pipe-framework-MAX-RAM-${{ env.TAG_NAME }}.zip
+          artifacts: samtest-pipe-framework-${{ env.TAG_NAME }}.zip,samtest-pipe-framework-${{ env.TAG_NAME }}_x64.zip
           token: ${{ secrets.SAMTEST_PIPE_FRAMEWORK_BUILD }}
 
 
