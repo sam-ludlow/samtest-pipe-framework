@@ -17,10 +17,10 @@ jobs:
 
     steps:
 
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Get version from AssemblyInfo
+      - name: Get Version from AssemblyInfo
         shell: pwsh
         run: |
           $content = Get-Content -Path "Properties/AssemblyInfo.cs" -Raw
@@ -35,10 +35,19 @@ jobs:
             exit 1
           }
 
-      - name: Show version
+      - name: Validate Version
         shell: pwsh
         run: |
           Write-Host "VERSION is: $env:TAG_NAME"
+          git fetch --tags
+          $existingTags = git tag
+          if ($existingTags -contains $env:TAG_NAME) {
+            Write-Host "Tag $env:TAG_NAME already exists"
+            exit 1
+          }
+
+          Write-Host "Tag OK $env:TAG_NAME"
+          exit 1
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2

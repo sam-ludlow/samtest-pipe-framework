@@ -16,6 +16,7 @@ namespace samtest_pipe_framework
 
 			Console.WriteLine($"Hello World! 64bit:'{Environment.Is64BitProcess}' Version: '{version}'");
 
+			Console.ReadLine();
 
 		}
 	}
