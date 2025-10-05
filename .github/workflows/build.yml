@@ -16,6 +16,17 @@ jobs:
     runs-on: windows-latest
 
     steps:
+
+      - name: Test
+        shell: bash
+        run: |
+            echo "{tag_name}={{$version}" >> $GITHUB_STATE
+
+            echo "-------"
+            echo "Hello: {state.tag_name}"
+            exit 1
+
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -29,9 +40,9 @@ jobs:
             Write-Host "Found version: $version"
             # Set the output for use in later steps
 
-            env.tag_name = $version
+           ## env.tag_name = $version
 
-
+           echo "{tag_name}={$version}" >> $GITHUB_STATE
 
 
 
