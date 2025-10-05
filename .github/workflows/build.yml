@@ -20,7 +20,8 @@ jobs:
       - name: Test
         shell: bash
         run: |
-            echo "{tag_name}={{$version}" >> $GITHUB_STATE
+            version = "999"
+            echo "{TAG_NAME}={$version}" >> $GITHUB_ENV
 
             echo "-------"
             echo "Hello: {state.tag_name}"
