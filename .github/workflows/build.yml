@@ -45,9 +45,11 @@ jobs:
           if ($LASTEXITCODE -eq 0) {
             Write-Host "Tag EXISTS '$env:TAG_NAME'."
             exit 1
-          } else {
-            Write-Host "Tag OK '$env:TAG_NAME'."
           }
+
+          $global:LASTEXITCODE = 0
+
+          Write-Host "Tag OK '$env:TAG_NAME'."
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
