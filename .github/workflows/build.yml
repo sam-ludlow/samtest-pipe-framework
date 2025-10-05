@@ -26,7 +26,7 @@ jobs:
             Write-Host "Found version: $version"
             # Set the output for use in later steps
 
-            env.tag_name = $version
+            $env.tag_name = $version
 
 
 
