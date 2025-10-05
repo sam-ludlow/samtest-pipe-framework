@@ -69,7 +69,7 @@ jobs:
 
           mkdir release32
           xcopy /s /y /i "bin\Release32" release32
-          powershell Compress-Archive -Path release32\* -DestinationPath output.zip
+          powershell Compress-Archive -Path release32\* -DestinationPath "samtest-pipe-framework-$env:TAG_NAME.zip"
 
           mkdir release64
           xcopy /s /y /i "bin\Release64" release64
@@ -81,7 +81,7 @@ jobs:
           tag: ${{ env.TAG_NAME }}
           name: ${{ env.TAG_NAME }}
           body: ${{ github.event.inputs.release_description }}
-          artifacts: output.zip
+          artifacts: "samtest-pipe-framework-$env:TAG_NAME.zip"
           token: ${{ secrets.SAMTEST_PIPE_FRAMEWORK_BUILD }}
 
 
