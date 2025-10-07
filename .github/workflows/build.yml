@@ -67,7 +67,8 @@ jobs:
           xcopy /s /y /i "bin\Release32" release32
 
           copy "release32\x86\*" "release32"
-          Remove-Item -Recurse -Force -Path "release32\x86" 
+          Remove-Item -Recurse -Force -Path "release32\x86"
+          Remove-Item -Recurse -Force -Path "release32\x64"
 
           powershell Compress-Archive -Path release32\* -DestinationPath "samtest-pipe-framework-$env:TAG_NAME.zip"
 
@@ -75,7 +76,8 @@ jobs:
           xcopy /s /y /i "bin\Release64" release64
 
           copy "release64\x64\*" "release64"
-          Remove-Item -Recurse -Force -Path "release64\x64" 
+          Remove-Item -Recurse -Force -Path "release64\x86"
+          Remove-Item -Recurse -Force -Path "release64\x64"
 
           powershell Compress-Archive -Path release64\* -DestinationPath "samtest-pipe-framework-${env:TAG_NAME}_x64.zip"
 
