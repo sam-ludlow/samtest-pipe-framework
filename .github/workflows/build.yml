@@ -65,10 +65,18 @@ jobs:
 
           mkdir release32
           xcopy /s /y /i "bin\Release32" release32
+
+          copy "release32\x86\*" "release32"
+          Remove-Item -Recurse -Force -Path "release32\x86" 
+
           powershell Compress-Archive -Path release32\* -DestinationPath "samtest-pipe-framework-$env:TAG_NAME.zip"
 
           mkdir release64
           xcopy /s /y /i "bin\Release64" release64
+
+          copy "release64\x64\*" "release64"
+          Remove-Item -Recurse -Force -Path "release64\x64" 
+
           powershell Compress-Archive -Path release64\* -DestinationPath "samtest-pipe-framework-${env:TAG_NAME}_x64.zip"
 
       - name: Create GitHub Release
@@ -79,5 +87,3 @@ jobs:
           body: ${{ github.event.inputs.release_description }}
           artifacts: samtest-pipe-framework-${{ env.TAG_NAME }}.zip,samtest-pipe-framework-${{ env.TAG_NAME }}_x64.zip
           token: ${{ secrets.SAMTEST_PIPE_FRAMEWORK_BUILD }}
-
-

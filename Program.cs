@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SQLite;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -14,7 +16,14 @@ namespace samtest_pipe_framework
 			Version assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
 			string version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}";
 
-			Console.WriteLine($"Hello World! 64bit:'{Environment.Is64BitProcess}' Version: '{version}'");
+			SQLiteConnection connection = new SQLiteConnection(@"Data source=C:\ao-data\mame\0280\_machine.sqlite");
+
+			DataTable table = new DataTable();
+			SQLiteDataAdapter adapter = new SQLiteDataAdapter("SELECT * FROM mame", connection);
+
+			adapter.Fill(table);
+
+			Console.WriteLine($"Hello World! 64bit:'{Environment.Is64BitProcess}' Version: '{version}' Data test:'{(string)table.Rows[0]["build"]}'");
 
 			Console.ReadLine();
 
