@@ -1,4 +1,4 @@
-name: Manual Build and Release
+name: Build & Release
 
 on:
   workflow_dispatch:
@@ -7,6 +7,9 @@ on:
         description: 'Release Body (Optional)'
         required: false
         type: string
+
+env:
+  APP_NAME: samtest-pipe-framework
 
 jobs:
   build:
@@ -52,17 +55,15 @@ jobs:
         uses: microsoft/setup-msbuild@v2
 
       - name: Restore NuGet packages
-        run: nuget restore samtest-pipe-framework.sln
+        run: nuget restore ${env:APP_NAME}.sln
 
       - name: Build the solution
         run: |
-          msbuild samtest-pipe-framework.csproj /p:Configuration=Release /p:Platform=x86 /p:OutputPath=bin\Release32\
-          msbuild samtest-pipe-framework.csproj /p:Configuration=Release /p:Platform=x64 /p:OutputPath=bin\Release64\
+          msbuild ${env:APP_NAME}.csproj /p:Configuration=Release /p:Platform=x86 /p:OutputPath=bin\Release32\
+          msbuild ${env:APP_NAME}.csproj /p:Configuration=Release /p:Platform=x64 /p:OutputPath=bin\Release64\
 
       - name: Create ZIP of binaries
         run: |
-          dir -r
-
           mkdir release32
           xcopy /s /y /i "bin\Release32" release32
 
@@ -73,7 +74,7 @@ jobs:
           del "release32\*.pdb"
           del "release32\*.config"
 
-          powershell Compress-Archive -Path release32\* -DestinationPath "samtest-pipe-framework-$env:TAG_NAME.zip"
+          powershell Compress-Archive -Path release32\* -DestinationPath "${env:APP_NAME}-${env:TAG_NAME}.zip"
 
           mkdir release64
           xcopy /s /y /i "bin\Release64" release64
@@ -85,7 +86,7 @@ jobs:
           del "release64\*.pdb"
           del "release64\*.config"
 
-          powershell Compress-Archive -Path release64\* -DestinationPath "samtest-pipe-framework-${env:TAG_NAME}_x64.zip"
+          powershell Compress-Archive -Path release64\* -DestinationPath "${env:APP_NAME}-${env:TAG_NAME}_x64.zip"
 
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
@@ -93,5 +94,5 @@ jobs:
           tag: ${{ env.TAG_NAME }}
           name: ${{ env.TAG_NAME }}
           body: ${{ github.event.inputs.release_description }}
-          artifacts: samtest-pipe-framework-${{ env.TAG_NAME }}.zip,samtest-pipe-framework-${{ env.TAG_NAME }}_x64.zip
+          artifacts: ${{ env:APP_NAME }}-${{ env.TAG_NAME }}.zip,${{ env:APP_NAME }}-${{ env.TAG_NAME }}_x64.zip
           token: ${{ secrets.SAMTEST_PIPE_FRAMEWORK_BUILD }}
