@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       release_description:
-        description: 'Release Body (Optional)'
+        description: 'Release Notes (Optional)'
         required: false
         type: string
 
@@ -75,6 +75,7 @@ jobs:
           del "release32\*.config"
 
           powershell Compress-Archive -Path release32\* -DestinationPath "${{ env.APP_NAME }}-${env:TAG_NAME}.zip"
+
 
           mkdir release64
           xcopy /s /y /i "bin\Release64" release64
